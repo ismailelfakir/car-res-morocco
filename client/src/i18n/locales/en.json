@@ -1,0 +1,337 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "fast": "Fast",
+    "certified": "Certified",
+    "secure": "Secure",
+    "selected": "Selected",
+    "minutes": "minutes",
+    "available": "available",
+    "validation": {
+      "required": "This field is required",
+      "invalidPhone": "Please enter a valid phone number",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPlate": "Please enter a valid car plate number"
+    },
+    "messages": {
+      "success": "Operation completed successfully",
+      "error": "An error occurred. Please try again.",
+      "warning": "Please check your input and try again.",
+      "info": "Please note the following information."
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "magazins": "Magazins",
+    "book": "Book Appointment",
+    "status": "Check Status",
+    "admin": "Admin",
+    "services": "Services",
+    "locations": "Locations",
+    "appointments": "Appointments",
+    "contact": "Contact",
+    "about": "About",
+    "help": "Help",
+    "support": "Support"
+  },
+  "home": {
+    "title": "Car Technical Inspection Reservation",
+    "subtitle": "Book your car technical inspection appointment in Morocco",
+    "browseMagazins": "Browse Magazins",
+    "checkStatus": "Check Booking Status",
+    "hero": {
+      "title": "Professional Car Technical Inspection",
+      "subtitle": "Book your appointment with certified inspection centers across Morocco",
+      "cta": "Book Now",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "title": "Why Choose Our Service",
+      "fast": "Fast & Efficient",
+      "certified": "Certified Centers",
+      "online": "Online Booking",
+      "support": "24/7 Support"
+    },
+    "stats": {
+      "title": "Trusted by Thousands",
+      "appointments": "Appointments",
+      "centers": "Centers",
+      "cities": "Cities"
+    },
+    "cta": {
+      "title": "Ready to Book Your Appointment?",
+      "subtitle": "Join thousands of satisfied customers who trust our service",
+      "button": "Get Started Now"
+    }
+  },
+  "appointments": {
+    "title": "Book Your Appointment",
+    "subtitle": "Schedule your car technical inspection with ease",
+    "form": {
+      "service": "Service",
+      "location": "Location",
+      "date": "Date",
+      "time": "Time",
+      "name": "Full Name",
+      "phone": "Phone Number",
+      "carPlate": "Car Plate Number",
+      "notes": "Notes (Optional)",
+      "selectService": "Select a service",
+      "selectLocation": "Select a location",
+      "selectDate": "Choose a date",
+      "selectTime": "Choose a time slot",
+      "customerInfo": "Customer Information"
+    },
+    "step1": "Service & Location",
+    "step2": "Date & Time",
+    "step3": "Personal Info",
+    "continue": "Continue",
+    "submit": "Submit Booking",
+    "processing": "Processing...",
+    "summary": "Booking Summary",
+    "loadingSlots": "Loading available time slots...",
+    "selectTime": "Select Time Slot",
+    "free": "free",
+    "availableSlots": "{{available}}/{{total}} slots",
+    "noAvailableSlots": "No available slots",
+    "noSlotsAvailable": "No time slots available",
+    "noSlotsAvailableDesc": "Try selecting a different date or contact us for assistance",
+    "tryDifferentDate": "Try Different Date",
+    "contactUs": "Contact Us",
+    "backToHome": "Back to Home",
+    "noServicesAvailable": "No services available",
+    "errors": {
+      "serviceRequired": "Please select a service",
+      "locationRequired": "Please select a location",
+      "dateRequired": "Please select a date",
+      "timeRequired": "Please select a time slot",
+      "nameRequired": "Please enter your full name",
+      "phoneRequired": "Please enter your phone number",
+      "carPlateRequired": "Please enter your car plate number",
+      "invalidPhone": "Please enter a valid phone number",
+      "invalidCarPlate": "Please enter a valid car plate number"
+    },
+    "success": {
+      "bookingSubmitted": "Your booking has been submitted successfully!",
+      "referenceNumber": "Reference Number",
+      "nextSteps": "We will contact you shortly to confirm your appointment."
+    }
+  },
+  "booking": {
+    "title": "Book Your Appointment",
+    "selectMagazin": "Select Magazin",
+    "selectService": "Select Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "customerInfo": "Customer Information",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "carPlate": "Car Plate Number",
+    "notes": "Notes (Optional)",
+    "bookNow": "Book Now",
+    "bookingSuccess": "Booking Successful!",
+    "referenceCode": "Reference Code",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "details": {
+      "appointmentDate": "Appointment Date",
+      "appointmentTime": "Appointment Time",
+      "serviceType": "Service Type",
+      "centerName": "Center Name",
+      "customerName": "Customer Name",
+      "phoneNumber": "Phone Number",
+      "carPlate": "Car Plate Number",
+      "notes": "Notes",
+      "totalPrice": "Total Price"
+    }
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "We encountered an unexpected error. Please try refreshing the page.",
+    "reload": "Reload Page",
+    "details": {
+      "title": "Error Details",
+      "message": "If this problem persists, please contact our support team.",
+      "contact": "Contact Support",
+      "report": "Report Issue"
+    }
+  },
+      "locations": {
+      "title": "Our Locations",
+      "subtitle": "Find technical inspection centers near you",
+      "workingHours": "Working Hours",
+      "findNearestCenter": "Find Nearest Center",
+      "address": "Address",
+      "locationDetails": "Location Details",
+      "slotDuration": "Slot Duration",
+      "closed": "Closed",
+      "hours": "Working Hours",
+      "noCentersAvailable": "No centers available",
+      "hero": {
+        "title": "Find Your Nearest Center",
+        "subtitle": "Locate technical inspection centers across Morocco"
+      },
+      "search": {
+        "placeholder": "Search by city or center name",
+        "noResults": "No centers found in this area"
+      },
+      "details": {
+        "capacity": "Capacity per slot",
+        "timezone": "Timezone",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Professional technical inspection services for all vehicle types",
+    "periodicDesc": "Comprehensive periodic technical inspection service",
+    "whyChooseUs": "Why Choose Us",
+    "certifiedTechnicians": "Certified Technicians",
+    "advancedEquipment": "Advanced Equipment",
+    "digitalCertificates": "Digital Certificates",
+    "viewAllServices": "View All Services",
+    "duration": "Duration: {{minutes}} minutes",
+    "hero": {
+      "title": "Technical Inspection Services",
+      "subtitle": "Professional and reliable vehicle inspection services across Morocco"
+    },
+    "types": {
+      "periodic": "Periodic Inspection",
+      "prePurchase": "Pre-Purchase Inspection",
+      "commercial": "Commercial Vehicle Inspection",
+      "motorcycle": "Motorcycle Inspection"
+    },
+    "details": {
+      "duration": "Duration",
+      "price": "Price",
+      "description": "Description",
+      "requirements": "Requirements",
+      "bookNow": "Book This Service"
+    }
+  },
+  "workingHours": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "short": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "status": {
+      "open": "Open",
+      "closed": "Closed",
+      "holiday": "Holiday",
+      "special": "Special Hours"
+    }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Go to Home",
+    "browseMagazins": "Browse Magazins",
+    "hero": {
+      "title": "404 - Page Not Found",
+      "subtitle": "Oops! The page you're looking for doesn't exist."
+    },
+    "suggestions": {
+      "title": "Here are some helpful links:",
+      "home": "Go to Homepage",
+      "services": "Browse Services",
+      "locations": "Find Centers",
+      "contact": "Contact Support"
+    }
+  },
+  "seo": {
+    "defaultTitle": "Car Technical Inspection Reservation - Morocco",
+    "defaultDescription": "Book your car technical inspection appointment in Morocco. Find inspection centers, check availability, and reserve your slot online.",
+    "home": {
+      "title": "Car Technical Inspection Reservation - Morocco",
+      "description": "Book your car technical inspection appointment in Morocco. Find inspection centers, check availability, and reserve your slot online.",
+      "keywords": "car inspection, technical inspection, Morocco, appointment booking, vehicle inspection"
+    },
+    "services": {
+      "title": "Technical Inspection Services - Morocco",
+      "description": "Explore our comprehensive technical inspection services for vehicles in Morocco. Professional and reliable inspection services.",
+      "keywords": "technical inspection services, vehicle inspection, Morocco, car services"
+    },
+    "locations": {
+      "title": "Inspection Centers Locations - Morocco",
+      "description": "Find technical inspection centers near you in Morocco. View locations, addresses, and contact information.",
+      "keywords": "inspection centers, locations, Morocco, technical inspection locations"
+    },
+    "appointments": {
+      "title": "Book Technical Inspection Appointment - Morocco",
+      "description": "Book your car technical inspection appointment online. Easy booking process, instant confirmation, and flexible scheduling.",
+      "keywords": "book appointment, technical inspection, online booking, Morocco"
+    },
+    "magazins": {
+      "title": "Technical Inspection Centers - Morocco",
+      "description": "Browse technical inspection centers in Morocco. Find centers by location, services offered, and availability.",
+      "keywords": "inspection centers, technical centers, Morocco, vehicle inspection"
+    },
+    "book": {
+      "title": "Book Your Inspection - Morocco",
+      "description": "Book your car technical inspection appointment. Select center, service, date, and time. Quick and easy online booking.",
+      "keywords": "book inspection, appointment booking, technical inspection, Morocco"
+    },
+    "workingHours": {
+      "title": "Working Hours - Technical Inspection Centers",
+      "description": "Check working hours and availability of technical inspection centers in Morocco.",
+      "keywords": "working hours, inspection centers, Morocco, availability"
+    },
+    "calendar": {
+      "title": "Select Date",
+      "quickSelection": "Quick Selection",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextWeek": "Next Week",
+      "nextMonth": "Next Month",
+      "workingDays": "Working Days",
+      "selected": "Selected",
+      "weekend": "Weekend",
+      "nonWorkingDay": "Non-working Day"
+    },
+    "dateInfo": {
+      "selectedDate": "Selected Date",
+      "dayType": "Day Type",
+      "daysUntil": "Days Until",
+      "weeksUntil": "In {{weeks}} weeks",
+      "monthsUntil": "In {{months}} months",
+      "daysCount": "{{count}} days",
+      "week": "Week",
+      "weekNumber": "Week {{week}}",
+      "quarter": "Quarter",
+      "dayOfYear": "Day of Year",
+      "weekday": "Weekday",
+      "month": "Month",
+      "workingDay": "Working Day",
+      "perfectForBooking": "This is today! Perfect for immediate booking.",
+      "greatForPlanning": "Tomorrow! Great for planning ahead.",
+      "checkAvailability": "Weekend date - check center availability."
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "fast": "Rapide",
+    "certified": "Certifié",
+    "secure": "Sécurisé",
+    "selected": "Sélectionné",
+    "minutes": "minutes",
+    "validation": {
+      "required": "Ce champ est obligatoire",
+      "invalidPhone": "Veuillez saisir un numéro de téléphone valide",
+      "invalidEmail": "Veuillez saisir une adresse e-mail valide",
+      "invalidPlate": "Veuillez saisir un numéro de plaque valide"
+    },
+    "messages": {
+      "success": "Opération terminée avec succès",
+      "error": "Une erreur s'est produite. Veuillez réessayer.",
+      "warning": "Veuillez vérifier votre saisie et réessayer.",
+      "info": "Veuillez noter les informations suivantes."
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "magazins": "Magasins",
+    "book": "Réserver un Rendez-vous",
+    "status": "Vérifier le Statut",
+    "admin": "Administration",
+    "services": "Services",
+    "locations": "Emplacements",
+    "appointments": "Rendez-vous",
+    "contact": "Contact",
+    "about": "À propos",
+    "help": "Aide",
+    "support": "Support"
+  },
+  "home": {
+    "title": "Réservation d'Inspection Technique Automobile",
+    "subtitle": "Réservez votre rendez-vous d'inspection technique automobile au Maroc",
+    "browseMagazins": "Parcourir les Magasins",
+    "checkStatus": "Vérifier le Statut de Réservation",
+    "hero": {
+      "title": "Inspection Technique Automobile Professionnelle",
+      "subtitle": "Réservez votre rendez-vous avec des centres d'inspection certifiés au Maroc",
+      "cta": "Réserver Maintenant",
+      "learnMore": "En Savoir Plus"
+    },
+    "features": {
+      "title": "Pourquoi Choisir Notre Service",
+      "fast": "Rapide et Efficace",
+      "certified": "Centres Certifiés",
+      "online": "Réservation en Ligne",
+      "support": "Support 24/7"
+    },
+    "stats": {
+      "title": "Fait Confiance par des Milliers",
+      "appointments": "Rendez-vous",
+      "centers": "Centres",
+      "cities": "Villes"
+    },
+    "cta": {
+      "title": "Prêt à Réserver Votre Rendez-vous ?",
+      "subtitle": "Rejoignez des milliers de clients satisfaits qui font confiance à notre service",
+      "button": "Commencer Maintenant"
+    }
+  },
+  "appointments": {
+    "title": "Réserver Votre Rendez-vous",
+    "subtitle": "Planifiez votre inspection technique automobile en toute simplicité",
+    "form": {
+      "service": "Service",
+      "location": "Emplacement",
+      "date": "Date",
+      "time": "Heure",
+      "name": "Nom Complet",
+      "phone": "Numéro de Téléphone",
+      "carPlate": "Numéro de Plaque d'Immatriculation",
+      "notes": "Notes (Optionnel)",
+      "selectService": "Sélectionner un service",
+      "selectLocation": "Sélectionner un emplacement",
+      "selectDate": "Choisir une date",
+      "selectTime": "Choisir un créneau horaire",
+      "customerInfo": "Informations Client"
+    },
+    "step1": "Service et Emplacement",
+    "step2": "Date et Heure",
+    "step3": "Informations Personnelles",
+    "continue": "Continuer",
+    "submit": "Soumettre la Réservation",
+    "processing": "Traitement...",
+    "summary": "Résumé de la Réservation",
+    "loadingSlots": "Chargement des créneaux horaires disponibles...",
+    "selectTime": "Sélectionner un Créneau Horaire",
+    "free": "libre",
+    "availableSlots": "{{available}}/{{total}} créneaux",
+    "noAvailableSlots": "Aucun créneau disponible",
+    "noSlotsAvailable": "Aucun créneau horaire disponible",
+    "noSlotsAvailableDesc": "Essayez de sélectionner une date différente ou contactez-nous pour obtenir de l'aide",
+    "tryDifferentDate": "Essayer une Date Différente",
+    "contactUs": "Nous Contacter",
+    "backToHome": "Retour à l'Accueil",
+    "errors": {
+      "serviceRequired": "Veuillez sélectionner un service",
+      "locationRequired": "Veuillez sélectionner un emplacement",
+      "dateRequired": "Veuillez sélectionner une date",
+      "timeRequired": "Veuillez sélectionner un créneau horaire",
+      "nameRequired": "Veuillez saisir votre nom complet",
+      "phoneRequired": "Veuillez saisir votre numéro de téléphone",
+      "carPlateRequired": "Veuillez saisir votre numéro de plaque d'immatriculation",
+      "invalidPhone": "Veuillez saisir un numéro de téléphone valide",
+      "invalidCarPlate": "Veuillez saisir un numéro de plaque d'immatriculation valide"
+    },
+    "success": {
+      "bookingSubmitted": "Votre réservation a été soumise avec succès !",
+      "referenceNumber": "Numéro de Référence",
+      "nextSteps": "Nous vous contacterons bientôt pour confirmer votre rendez-vous."
+    }
+  },
+  "booking": {
+    "title": "Réserver Votre Rendez-vous",
+    "selectMagazin": "Sélectionner un Magasin",
+    "selectService": "Sélectionner un Service",
+    "selectDate": "Sélectionner une Date",
+    "selectTime": "Sélectionner une Heure",
+    "customerInfo": "Informations Client",
+    "name": "Nom Complet",
+    "phone": "Numéro de Téléphone",
+    "carPlate": "Numéro de Plaque d'Immatriculation",
+    "notes": "Notes (Optionnel)",
+    "bookNow": "Réserver Maintenant",
+    "bookingSuccess": "Réservation Réussie !",
+    "referenceCode": "Code de Référence",
+    "status": {
+      "pending": "En Attente",
+      "confirmed": "Confirmé",
+      "completed": "Terminé",
+      "cancelled": "Annulé"
+    },
+    "details": {
+      "appointmentDate": "Date du Rendez-vous",
+      "appointmentTime": "Heure du Rendez-vous",
+      "serviceType": "Type de Service",
+      "centerName": "Nom du Centre",
+      "customerName": "Nom du Client",
+      "phoneNumber": "Numéro de Téléphone",
+      "carPlate": "Numéro de Plaque d'Immatriculation",
+      "notes": "Notes",
+      "totalPrice": "Prix Total"
+    }
+  },
+  "errorBoundary": {
+    "title": "Quelque chose s'est mal passé",
+    "message": "Nous avons rencontré une erreur inattendue. Veuillez essayer de rafraîchir la page.",
+    "reload": "Recharger la Page",
+    "details": {
+      "title": "Détails de l'Erreur",
+      "message": "Si ce problème persiste, veuillez contacter notre équipe de support.",
+      "contact": "Contacter le Support",
+      "report": "Signaler le Problème"
+    }
+  },
+  "locations": {
+    "title": "Nos Emplacements",
+    "subtitle": "Trouvez des centres d'inspection technique près de chez vous",
+    "workingHours": "Heures d'Ouverture",
+    "findNearestCenter": "Trouver le Centre le Plus Proche",
+    "address": "Adresse",
+    "locationDetails": "Détails de l'Emplacement",
+    "slotDuration": "Durée du Créneau",
+    "closed": "Fermé",
+    "hero": {
+      "title": "Trouvez Votre Centre le Plus Proche",
+      "subtitle": "Localisez des centres d'inspection technique au Maroc"
+    },
+    "search": {
+      "placeholder": "Rechercher par ville ou nom de centre",
+      "noResults": "Aucun centre trouvé dans cette zone"
+    },
+    "details": {
+      "capacity": "Capacité par créneau",
+      "timezone": "Fuseau Horaire",
+      "status": "Statut",
+      "active": "Actif",
+      "inactive": "Inactif"
+    }
+  },
+  "services": {
+    "title": "Nos Services",
+    "subtitle": "Services d'inspection technique professionnels pour tous types de véhicules",
+    "periodicDesc": "Service d'inspection technique périodique complet",
+    "whyChooseUs": "Pourquoi Nous Choisir",
+    "certifiedTechnicians": "Techniciens Certifiés",
+    "advancedEquipment": "Équipement Avancé",
+    "digitalCertificates": "Certificats Numériques",
+    "viewAllServices": "Voir Tous les Services",
+    "duration": "Durée : {{minutes}} minutes",
+    "hero": {
+      "title": "Services d'Inspection Technique",
+      "subtitle": "Services d'inspection de véhicules professionnels et fiables au Maroc"
+    },
+    "types": {
+      "periodic": "Inspection Périodique",
+      "prePurchase": "Inspection Pré-achat",
+      "commercial": "Inspection de Véhicule Commercial",
+      "motorcycle": "Inspection de Moto"
+    },
+    "details": {
+      "duration": "Durée",
+      "price": "Prix",
+      "description": "Description",
+      "requirements": "Exigences",
+      "bookNow": "Réserver Ce Service"
+    }
+  },
+  "workingHours": {
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche",
+    "short": {
+      "monday": "Lun",
+      "tuesday": "Mar",
+      "wednesday": "Mer",
+      "thursday": "Jeu",
+      "friday": "Ven",
+      "saturday": "Sam",
+      "sunday": "Dim"
+    },
+    "status": {
+      "open": "Ouvert",
+      "closed": "Fermé",
+      "holiday": "Férié",
+      "special": "Heures Spéciales"
+    }
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "message": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "goHome": "Aller à l'Accueil",
+    "browseMagazins": "Parcourir les Magasins",
+    "hero": {
+      "title": "404 - Page Non Trouvée",
+      "subtitle": "Oups ! La page que vous recherchez n'existe pas."
+    },
+    "suggestions": {
+      "title": "Voici quelques liens utiles :",
+      "home": "Aller à l'Accueil",
+      "services": "Parcourir les Services",
+      "locations": "Trouver des Centres",
+      "contact": "Contacter le Support"
+    }
+  },
+  "seo": {
+    "defaultTitle": "Réservation d'Inspection Technique Automobile - Maroc",
+    "defaultDescription": "Réservez votre rendez-vous d'inspection technique automobile au Maroc. Trouvez des centres d'inspection, vérifiez la disponibilité et réservez votre créneau en ligne.",
+    "home": {
+      "title": "Réservation d'Inspection Technique Automobile - Maroc",
+      "description": "Réservez votre rendez-vous d'inspection technique automobile au Maroc. Trouvez des centres d'inspection, vérifiez la disponibilité et réservez votre créneau en ligne.",
+      "keywords": "inspection automobile, inspection technique, Maroc, réservation de rendez-vous, inspection de véhicule"
+    },
+    "services": {
+      "title": "Services d'Inspection Technique - Maroc",
+      "description": "Explorez nos services d'inspection technique complets pour véhicules au Maroc. Services d'inspection professionnels et fiables.",
+      "keywords": "services d'inspection technique, inspection de véhicule, Maroc, services automobiles"
+    },
+    "locations": {
+      "title": "Emplacements des Centres d'Inspection - Maroc",
+      "description": "Trouvez des centres d'inspection technique près de chez vous au Maroc. Consultez les emplacements, adresses et informations de contact.",
+      "keywords": "centres d'inspection, emplacements, Maroc, emplacements d'inspection technique"
+    },
+    "appointments": {
+      "title": "Réserver un Rendez-vous d'Inspection Technique - Maroc",
+      "description": "Réservez votre rendez-vous d'inspection technique automobile en ligne. Processus de réservation facile, confirmation instantanée et planification flexible.",
+      "keywords": "réserver un rendez-vous, inspection technique, réservation en ligne, Maroc"
+    },
+    "magazins": {
+      "title": "Centres d'Inspection Technique - Maroc",
+      "description": "Parcourez les centres d'inspection technique au Maroc. Trouvez des centres par emplacement, services offerts et disponibilité.",
+      "keywords": "centres d'inspection, centres techniques, Maroc, inspection de véhicule"
+    },
+    "book": {
+      "title": "Réserver Votre Inspection - Maroc",
+      "description": "Réservez votre rendez-vous d'inspection technique automobile. Sélectionnez le centre, le service, la date et l'heure. Réservation en ligne rapide et facile.",
+      "keywords": "réserver une inspection, réservation de rendez-vous, inspection technique, Maroc"
+    },
+    "workingHours": {
+      "title": "Heures d'Ouverture - Centres d'Inspection Technique",
+      "description": "Vérifiez les heures d'ouverture et la disponibilité des centres d'inspection technique au Maroc.",
+      "keywords": "heures d'ouverture, centres d'inspection, Maroc, disponibilité"
+    }
+  }
+}
