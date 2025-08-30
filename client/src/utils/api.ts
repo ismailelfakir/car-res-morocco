@@ -1,85 +1,66 @@
 // API Configuration and utility functions
-const API_BASE_URL =
-  (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:4000/api'
-
-// Helper to safely join base + endpoint
-const join = (base: string, endpoint: string) =>
-  `${base.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`
-
-type Json = Record<string, unknown> | unknown[] | null
-
-// Core fetch wrapper with JSON parsing + credentials
-async function fetchJson<T = Json>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const url = join(API_BASE_URL, endpoint)
-
-  const resp = await fetch(url, {
-    ...options,
-    credentials: 'include', // ✅ always send cookies (for Railway ↔ Vercel auth)
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    }
-  })
-
-  const isJson =
-    resp.headers.get('content-type')?.includes('application/json') ?? false
-  const payload = isJson ? await resp.json().catch(() => undefined) : undefined
-
-  if (!resp.ok) {
-    const msg =
-      (payload as any)?.message ||
-      `HTTP ${resp.status} ${resp.statusText} at ${endpoint}`
-    const error = new Error(msg) as Error & { status?: number; data?: unknown }
-    error.status = resp.status
-    error.data = payload
-    throw error
-  }
-
-  return (payload as T) ?? ({} as T)
-}
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:4000/api'
 
 export const api = {
   // Base URL getter
   getBaseUrl: () => API_BASE_URL,
-
+  
   // Full URL builder
-  url: (endpoint: string) => join(API_BASE_URL, endpoint),
-
-  // Low-level fetch
-  fetch: fetchJson,
-
-  // Shorthands
-  get: <T = Json>(endpoint: string, options: RequestInit = {}) =>
-    fetchJson<T>(endpoint, { ...options, method: 'GET' }),
-
-  post: <T = Json>(
-    endpoint: string,
-    data?: unknown,
-    options: RequestInit = {}
-  ) =>
-    fetchJson<T>(endpoint, {
-      ...options,
+  url: (endpoint: string) => `${API_BASE_URL}${endpoint}`,
+  
+  // Common fetch wrapper with error handling
+  fetch: async (endpoint: string, options: RequestInit = {}) => {
+    const url = api.url(endpoint)
+    
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      return response
+    } catch (error) {
+      console.error(`API Error (${endpoint}):`, error)
+      throw error
+    }
+  },
+  
+  // GET request
+  get: (endpoint: string, options: RequestInit = {}) => 
+    api.fetch(endpoint, { ...options, method: 'GET' }),
+  
+  // POST request
+  post: (endpoint: string, data?: any, options: RequestInit = {}) => 
+    api.fetch(endpoint, { 
+      ...options, 
       method: 'POST',
-      body: data != null ? JSON.stringify(data) : undefined
+      body: data ? JSON.stringify(data) : undefined,
     }),
-
-  put: <T = Json>(
-    endpoint: string,
-    data?: unknown,
-    options: RequestInit = {}
-  ) =>
-    fetchJson<T>(endpoint, {
-      ...options,
+  
+  // PUT request
+  put: (endpoint: string, data?: any, options: RequestInit = {}) => 
+    api.fetch(endpoint, { 
+      ...options, 
       method: 'PUT',
-      body: data != null ? JSON.stringify(data) : undefined
+      body: data ? JSON.stringify(data) : undefined,
     }),
-
-  delete: <T = Json>(endpoint: string, options: RequestInit = {}) =>
-    fetchJson<T>(endpoint, { ...options, method: 'DELETE' })
+  
+  // DELETE request
+  delete: (endpoint: string, options: RequestInit = {}) => 
+    api.fetch(endpoint, { ...options, method: 'DELETE' }),
+  
+  // With credentials (for admin routes)
+  withCredentials: (options: RequestInit = {}) => ({
+    ...options,
+    credentials: 'include' as const,
+  }),
 }
 
 // Specific API endpoints
@@ -87,9 +68,9 @@ export const endpoints = {
   // Auth
   auth: {
     login: '/auth/login',
-    logout: '/auth/logout'
+    logout: '/auth/logout',
   },
-
+  
   // Appointments
   appointments: {
     create: '/appointments',
@@ -97,18 +78,18 @@ export const endpoints = {
     admin: '/appointments/admin',
     confirm: (id: string) => `/appointments/${id}/confirm`,
     reject: (id: string) => `/appointments/${id}/reject`,
-    cancel: (id: string) => `/appointments/${id}/cancel`
+    cancel: (id: string) => `/appointments/${id}/cancel`,
   },
-
+  
   // Services
   services: {
     list: '/services',
     get: (id: string) => `/services/${id}`,
     create: '/services',
     update: (id: string) => `/services/${id}`,
-    delete: (id: string) => `/services/${id}`
+    delete: (id: string) => `/services/${id}`,
   },
-
+  
   // Magazins (Technical Centers)
   magazins: {
     list: '/magazins',
@@ -117,16 +98,15 @@ export const endpoints = {
     create: '/magazins',
     update: (id: string) => `/magazins/${id}`,
     delete: (id: string) => `/magazins/${id}`,
-    availability: (id: string) => `/magazins/${id}/availability`
+    availability: (id: string) => `/magazins/${id}/availability`,
   },
-
+  
   // Reports
   reports: {
     daily: (date: string) => `/reports/daily?date=${date}`,
-    dailyByMagazin: (magazinId: string, date: string) =>
-      `/reports/daily/${magazinId}.pdf?date=${date}`,
-    dailyAll: (date: string) => `/reports/daily/all.pdf?date=${date}`
-  }
+    dailyByMagazin: (magazinId: string, date: string) => `/reports/daily/${magazinId}.pdf?date=${date}`,
+    dailyAll: (date: string) => `/reports/daily/all.pdf?date=${date}`,
+  },
 }
 
 export default api
