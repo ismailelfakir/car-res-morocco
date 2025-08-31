@@ -110,7 +110,7 @@ const AdminAppointments: React.FC = () => {
 
   const fetchMagazins = async () => {
     try {
-      const response = await api.get(endpoints.magazins.list, api.withCredentials())
+      const response = await api.get(endpoints.magazins.admin, api.withCredentials())
       if (response.ok) {
         const data = await response.json()
         setMagazins(data.data || [])
