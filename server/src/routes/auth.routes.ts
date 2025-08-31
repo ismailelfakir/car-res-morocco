@@ -56,7 +56,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: NODE_ENV === 'production', // HTTPS only in production
-      sameSite: 'strict',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'strict', // 'none' for cross-domain in production
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     })
 
@@ -100,7 +100,7 @@ router.post('/logout', (_req: Request, res: Response): void => {
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
-      sameSite: 'strict'
+      sameSite: NODE_ENV === 'production' ? 'none' : 'strict'
     })
 
     res.status(200).json({ 
