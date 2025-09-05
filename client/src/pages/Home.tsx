@@ -508,10 +508,10 @@ const Home: React.FC = () => {
                         {t('home.contact.info.phone')}
                       </h4>
                       <button
-                        onClick={() => copyToClipboard('+21295924473', 'phone')}
+                        onClick={() => copyToClipboard('0608191720', 'phone')}
                         className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
                       >
-                        <span>+21295924473</span>
+                        <span>0608191720</span>
                         <div className="relative">
                           {copiedItem === 'phone' ? (
                             <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -538,10 +538,10 @@ const Home: React.FC = () => {
                         {t('home.contact.info.email')}
                       </h4>
                       <button
-                        onClick={() => copyToClipboard('info@cartech-morocco.ma', 'email')}
+                        onClick={() => copyToClipboard('Automobilti.services@gmail.com', 'email')}
                         className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
                       >
-                        <span>info@cartech-morocco.ma</span>
+                        <span>Automobilti.services@gmail.com</span>
                         <div className="relative">
                           {copiedItem === 'email' ? (
                             <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
