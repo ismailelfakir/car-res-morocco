@@ -23,7 +23,9 @@
     "fast": "Rapide",
     "nationwide": "National",
     "certified": "Certifié",
-    "actions": "Actions"
+    "actions": "Actions",
+    "quickActions": "Actions Rapides",
+    "select": "Sélectionner"
   },
   "navigation": {
     "home": "Accueil",
@@ -42,7 +44,8 @@
     "hero": {
       "title": "Services d'Inspection Automobile Professionnels",
       "description": "Faites inspecter votre véhicule par des techniciens certifiés dans des emplacements pratiques à travers le Maroc",
-      "cta": "Réserver un Rendez-vous"
+      "cta": "Réserver un Rendez-vous",
+      "badge": "Fait Confiance par 10,000+ Clients"
     },
     "features": {
       "title": "Pourquoi Nous Choisir",
@@ -78,11 +81,61 @@
       "bookAppointment": "Réserver un Rendez-vous",
       "findLocations": "Trouver des Emplacements"
     },
+    "contact": {
+      "title": "Contactez-nous",
+      "subtitle": "Vous avez des questions? Nous sommes là pour vous aider avec vos besoins d'inspection de véhicules",
+      "badge": "Contact",
+      "info": {
+        "title": "Informations de Contact",
+        "phone": "Téléphone",
+        "email": "Email"
+      },
+      "form": {
+        "title": "Envoyez-nous un Message",
+        "name": "Votre Nom",
+        "email": "Votre Email",
+        "phone": "Votre Téléphone",
+        "subject": "Sujet",
+        "message": "Message",
+        "send": "Envoyer le Message",
+        "sending": "Envoi en cours...",
+        "success": "Message envoyé avec succès!",
+        "error": "Échec de l'envoi du message. Veuillez réessayer."
+      },
+      "cta": {
+        "title": "Besoin d'Aide?",
+        "subtitle": "Notre équipe de support est prête à vous aider",
+        "contact": "Contacter le Support"
+      },
+      "social": {
+        "title": "Suivez-nous",
+        "subtitle": "Restez connecté avec nous sur les réseaux sociaux"
+      }
+    },
     "stats": {
-      "vehiclesInspected": "Véhicules Inspectés",
+      "servicesAvailable": "Services Disponibles",
       "technicalCenters": "Centres Techniques",
       "customerSatisfaction": "Satisfaction Client",
       "onlineBooking": "Réservation en Ligne"
+    },
+    "featuredServices": {
+      "title": "Nos Services Vedettes",
+      "subtitle": "Services d'inspection de véhicules professionnels adaptés à vos besoins spécifiques",
+      "badge": "Services Professionnels",
+      "defaultDescription": "Service d'inspection de véhicules professionnel avec des techniciens certifiés et un équipement de pointe.",
+      "feature1": "Techniciens Certifiés",
+      "feature2": "Équipement Avancé",
+      "learnMore": "En Savoir Plus",
+      "viewAllServices": "Voir Tous les Services"
+    },
+    "featuredCenters": {
+      "title": "Nos Centres Techniques",
+      "subtitle": "Visitez nos centres d'inspection de pointe à travers le Maroc",
+      "badge": "Emplacements Premium",
+      "feature1": "Installations Modernes",
+      "feature2": "Accès Pratique",
+      "visitCenter": "Visiter le Centre",
+      "viewAllCenters": "Voir Tous les Centres"
     }
   },
   "services": {
@@ -157,7 +210,10 @@
     "casablanca": "Centre Technique de Casablanca",
     "rabat": "Centre Technique de Rabat",
     "marrakech": "Centre Technique de Marrakech",
+    "centerInformation": "Informations du Centre",
+    "contactInformation": "Informations de Contact",
     "address": "Adresse",
+    "location": "Localisation",
     "hours": "Heures de Travail",
     "capacity": "Capacité par créneau",
     "slotDuration": "Durée du créneau",
@@ -208,13 +264,25 @@
       "selectLocation": "Sélectionnez un emplacement",
       "selectDate": "Choisissez une date",
       "selectTime": "Choisissez un créneau horaire",
+      "filterByCity": "Filtrer par Ville",
+      "allCities": "Toutes les Villes",
+      "selectCities": "Sélectionnez des villes pour filtrer les centres:",
+      "addMoreCities": "Ajouter plus de villes:",
+      "clearAllCities": "Effacer toutes les villes",
+      "noCentersInSelectedCities": "Aucun centre disponible dans les villes sélectionnées",
+      "centersInSelectedCities": "centres disponibles dans les villes sélectionnées",
       "phoneHelper": "Format : +212 6 12 34 56 78 ou 06 12 34 56 78"
     },
     "status": {
+      "free": "Libre",
       "pending": "En Attente",
       "confirmed": "Confirmé",
-      "cancelled": "Annulé"
+      "cancelled": "Annulé",
+      "full": "Complet",
+      "active": "Actif",
+      "inactive": "Inactif"
     },
+    "checkAvailability": "Vérifier la Disponibilité",
     "reference": "Code de Référence",
     "book": "Réserver un Rendez-vous",
     "confirm": "Confirmer le Rendez-vous",

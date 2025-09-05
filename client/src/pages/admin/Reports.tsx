@@ -177,47 +177,7 @@ const AdminReports: React.FC = () => {
     }
   }
 
-  const downloadAllPDF = async () => {
-    try {
-      setDownloadingPDF('all')
-      console.log(`Downloading all PDF for date ${selectedDate}`)
-      
-      const response = await api.get(endpoints.reports.dailyAll(selectedDate), api.withCredentials())
-      
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `all-appointments-${selectedDate}.pdf`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
-        console.log('All PDF download completed successfully')
-        setSuccess('All appointments PDF downloaded successfully!')
-        setTimeout(() => setSuccess(null), 3000)
-      } else {
-        console.error('Failed to download all PDF:', response.status)
-        const errorData = await response.text()
-        console.error('All PDF download error:', errorData)
-        
-        if (response.status === 401) {
-          setError('Authentication required for PDF download')
-        } else if (response.status === 403) {
-          setError('Access denied for PDF download')
-        } else if (response.status === 404) {
-          setError('PDF report not found for this date')
-        } else {
-          setError('Failed to download all PDF report')
-        }
-      }
-    } catch (error) {
-      console.error('Error downloading all PDF:', error)
-    } finally {
-      setDownloadingPDF(null)
-    }
-  }
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -329,17 +289,7 @@ const AdminReports: React.FC = () => {
               ]}
             />
 
-            <div className="flex items-end">
-              <Button
-                variant="primary"
-                onClick={downloadAllPDF}
-                className="ml-2"
-                loading={downloadingPDF === 'all'}
-                disabled={downloadingPDF !== null}
-              >
-                {downloadingPDF === 'all' ? t('admin.reports.downloading') : t('admin.reports.downloadAllPDF')}
-              </Button>
-            </div>
+
           </div>
         </CardBody>
       </Card>

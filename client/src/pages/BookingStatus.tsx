@@ -67,13 +67,13 @@ const BookingStatus: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800'
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800'
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700'
     }
   }
 
@@ -260,7 +260,7 @@ const BookingStatus: React.FC = () => {
           }
         }}
       />
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
         {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -281,7 +281,7 @@ const BookingStatus: React.FC = () => {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold text-gray-900">{t('booking.status')}</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('booking.status')}</h2>
                   <span className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(appointment.status)}`}>
                     {getStatusIcon(appointment.status)}
                     <span className="ml-2">{getStatusText(appointment.status)}</span>
@@ -294,26 +294,26 @@ const BookingStatus: React.FC = () => {
                     <div key={index} className="flex items-start">
                       <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-4 ${
                         step.completed 
-                          ? 'bg-blue-100 text-blue-600' 
-                          : 'bg-gray-100 text-gray-400'
+                          ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300' 
+                          : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-400'
                       }`}>
                         <span className="text-lg">{step.icon}</span>
                       </div>
                       <div className="flex-1">
                         <h3 className={`font-medium ${
-                          step.completed ? 'text-gray-900' : 'text-gray-500'
+                          step.completed ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-400'
                         }`}>
                           {step.title}
                         </h3>
                         <p className={`text-sm ${
-                          step.completed ? 'text-gray-600' : 'text-gray-400'
+                          step.completed ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'
                         }`}>
                           {step.description}
                         </p>
                       </div>
                       {index < statusTimeline.length - 1 && (
                         <div className={`w-0.5 h-8 mx-5 ${
-                          step.completed ? 'bg-blue-200' : 'bg-gray-200'
+                          step.completed ? 'bg-blue-200 dark:bg-blue-900/40' : 'bg-gray-200 dark:bg-gray-700'
                         }`} />
                       )}
                     </div>
@@ -325,7 +325,7 @@ const BookingStatus: React.FC = () => {
             {/* Appointment Details */}
             <Card>
               <CardHeader>
-                <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                   <svg className="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -336,35 +336,35 @@ const BookingStatus: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.service')}:</span>
-                      <p className="text-gray-600">{appointment.service.name}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.service')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300">{appointment.service.name}</p>
                     </div>
                     
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.duration')}:</span>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.duration')}:</span>
   
                     </div>
                     
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.dateTime')}:</span>
-                      <p className="text-gray-600">{formatDateTime(appointment.start)}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.dateTime')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300">{formatDateTime(appointment.start)}</p>
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.endTime')}:</span>
-                      <p className="text-gray-600">{formatDateTime(appointment.end)}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.endTime')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300">{formatDateTime(appointment.end)}</p>
                     </div>
                     
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.bookedOn')}:</span>
-                      <p className="text-gray-600">{formatDateTime(appointment.createdAt)}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.bookedOn')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300">{formatDateTime(appointment.createdAt)}</p>
                     </div>
                     
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.reference')}:</span>
-                      <p className="text-gray-600 font-mono text-sm">{appointment.reference}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.reference')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300 font-mono text-sm">{appointment.reference}</p>
                     </div>
                   </div>
                 </div>
@@ -377,7 +377,7 @@ const BookingStatus: React.FC = () => {
             {/* Customer Details */}
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                   <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -387,21 +387,21 @@ const BookingStatus: React.FC = () => {
               <CardBody>
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.name')}:</span>
-                    <p className="text-gray-600">{appointment.customer.name}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.name')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300">{appointment.customer.name}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.phone')}:</span>
-                    <p className="text-gray-600">{appointment.customer.phone}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.phone')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300">{appointment.customer.phone}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.carPlate')}:</span>
-                    <p className="text-gray-600 font-mono">{appointment.customer.carPlate}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.carPlate')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300 font-mono">{appointment.customer.carPlate}</p>
                   </div>
                   {appointment.customer.notes && (
                     <div>
-                      <span className="font-medium text-gray-700">{t('booking.fields.notes')}:</span>
-                      <p className="text-gray-600">{appointment.customer.notes}</p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.notes')}:</span>
+                      <p className="text-gray-600 dark:text-gray-300">{appointment.customer.notes}</p>
                     </div>
                   )}
                 </div>
@@ -411,7 +411,7 @@ const BookingStatus: React.FC = () => {
             {/* Location Details */}
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                   <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -422,16 +422,16 @@ const BookingStatus: React.FC = () => {
               <CardBody>
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.center')}:</span>
-                    <p className="text-gray-600">{appointment.magazin.name}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.center')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300">{appointment.magazin.name}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.city')}:</span>
-                    <p className="text-gray-600">{appointment.magazin.city}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.city')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300">{appointment.magazin.city}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">{t('booking.fields.address')}:</span>
-                    <p className="text-gray-600 text-sm">{appointment.magazin.address}</p>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{t('booking.fields.address')}:</span>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">{appointment.magazin.address}</p>
                   </div>
                 </div>
               </CardBody>
@@ -440,7 +440,7 @@ const BookingStatus: React.FC = () => {
             {/* Quick Actions */}
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-gray-900">{t('booking.quickActions')}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('booking.quickActions')}</h3>
               </CardHeader>
               <CardBody className="space-y-3">
                 <Button variant="primary" asChild className="w-full">

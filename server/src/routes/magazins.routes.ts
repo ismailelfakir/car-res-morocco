@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { z } from 'zod'
-import { Magazin, Service, Appointment } from '../models'
-import { getAvailableSlots, generateAndSaveSlots, generateSlotsForDateRange } from '../services/slotService'
+import { Magazin, Service, Appointment, Slot } from '../models'
+import { generateAndSaveSlots, generateSlotsForDateRange } from '../services/slotService'
 import { requireAdmin } from '../middleware/auth'
 
 const router = Router()
@@ -470,20 +470,40 @@ router.get('/:id/availability', async (req: Request, res: Response): Promise<voi
       capacityPerSlot
     })
     
-    // Get available slots from database
-    const slots = await getAvailableSlots(id, date)
+    // Get all slots from database (including taken/pending ones)
+    const slots = await Slot.find({
+      magazinId: id,
+      date
+    }).sort({ startTime: 1 })
     
     if (slots.length === 0) {
       res.status(200).json({
         success: true,
-        data: [],
-        message: 'No available slots for this date'
+        data: {
+          magazin: {
+            id: (magazin as any)._id,
+            name: (magazin as any).name,
+            city: (magazin as any).city,
+            address: (magazin as any).address,
+            capacityPerSlot: (magazin as any).capacityPerSlot,
+            slotDurationMinutes: (magazin as any).slotDurationMinutes
+          },
+          service: {
+            id: (service as any)._id,
+            name: (service as any).name
+          },
+          date: date,
+          slots: [],
+          totalSlots: 0,
+          availableSlots: 0
+        },
+        message: 'No slots available for this date'
       })
       return
     }
     
     // Convert slots to frontend format
-    const formattedSlots = slots.map(slot => ({
+    const formattedSlots = slots.map((slot: any) => ({
       start: slot.startISO.toISOString(),
       end: slot.endISO.toISOString(),
       time: slot.startTime,
@@ -510,7 +530,7 @@ router.get('/:id/availability', async (req: Request, res: Response): Promise<voi
         date: date,
         slots: formattedSlots,
         totalSlots: slots.length,
-        availableSlots: slots.filter(slot => slot.available).length
+        availableSlots: slots.filter((slot: any) => slot.available).length
       }
     })
 

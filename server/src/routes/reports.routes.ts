@@ -164,71 +164,143 @@ router.get('/daily/:magazinId.pdf', requireAdmin, async (req: Request, res: Resp
     .sort({ start: 1 })
     .lean()
 
-    // Create PDF document
-    const doc = new PDFDocument({ margin: 50 })
+    // Create PDF document with smaller margins for more content
+    const doc = new PDFDocument({ 
+      margin: 30,
+      size: 'A4',
+      info: {
+        Title: `Daily Report - ${magazin.name}`,
+        Author: 'CarTech Morocco',
+        Subject: `Appointments for ${date}`,
+        Keywords: 'appointments, report, technical center'
+      }
+    })
     
     // Set response headers for PDF download
     res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', `attachment; filename="daily-report-${magazin.name}-${date}.pdf"`)
+    res.setHeader('Content-Disposition', `attachment; filename="daily-report-${magazin.name.replace(/[^a-zA-Z0-9]/g, '-')}-${date}.pdf"`)
     
     // Pipe PDF to response
     doc.pipe(res)
 
-    // Add header
-    doc.fontSize(20).text('Daily Appointment Report', { align: 'center' })
-    doc.moveDown()
-    doc.fontSize(14).text(`Technical Center: ${magazin.name}`, { align: 'center' })
-    doc.fontSize(12).text(`City: ${magazin.city}`, { align: 'center' })
-    doc.fontSize(12).text(`Date: ${new Date(date).toLocaleDateString('en-US')}`, { align: 'center' })
-    doc.moveDown(2)
+    // Add professional header with company branding
+    doc.fontSize(18).font('Helvetica-Bold').text('CAR TECHNICAL INSPECTION', { align: 'center' })
+    doc.fontSize(14).font('Helvetica').text('Daily Appointment Report', { align: 'center' })
+    doc.moveDown(0.5)
+    
+    // Add center info in a box
+    const headerBoxTop = doc.y
+    doc.rect(50, headerBoxTop, 500, 60).stroke('#2563eb')
+    doc.fontSize(12).font('Helvetica-Bold').text('TECHNICAL CENTER:', 60, headerBoxTop + 10)
+    doc.fontSize(11).font('Helvetica').text(magazin.name, 60, headerBoxTop + 25)
+    doc.fontSize(10).font('Helvetica').text(`${magazin.city} • ${magazin.address}`, 60, headerBoxTop + 40)
+    doc.fontSize(10).font('Helvetica-Bold').text(`REPORT DATE: ${new Date(date).toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })}`, 60, headerBoxTop + 50)
+    doc.y = headerBoxTop + 80
 
-    // Add summary
-    doc.fontSize(16).text('Summary', { underline: true })
-    doc.fontSize(12).text(`Total Appointments: ${appointments.length}`)
-    doc.moveDown()
+    // Add summary in a professional format
+    doc.fontSize(12).font('Helvetica-Bold').text('SUMMARY', { underline: true })
+    doc.moveDown(0.3)
+    
+    const summaryBoxTop = doc.y
+    doc.rect(50, summaryBoxTop, 500, 50).fill('#f8fafc').stroke('#e2e8f0')
+    
+    // Ensure text color is black for visibility
+    doc.fillColor('black')
+    
+    doc.fontSize(10).font('Helvetica-Bold').text('Total Appointments:', 60, summaryBoxTop + 10)
+    doc.fontSize(10).font('Helvetica').text(appointments.length.toString(), 200, summaryBoxTop + 10)
+    
+    doc.fontSize(10).font('Helvetica-Bold').text('Total Revenue:', 60, summaryBoxTop + 25)
+    const totalRevenue = appointments.length * 20
+    doc.fontSize(10).font('Helvetica').text(`${totalRevenue} DH`, 200, summaryBoxTop + 25)
+    
+    doc.fontSize(10).font('Helvetica-Bold').text('Generated:', 60, summaryBoxTop + 40)
+    doc.fontSize(10).font('Helvetica').text(new Date().toLocaleString('en-US'), 200, summaryBoxTop + 40)
+    doc.y = summaryBoxTop + 70
 
     if (appointments.length === 0) {
       // Add message for no appointments
-      doc.fontSize(14).text('No appointments found for this date.', { align: 'center' })
+      doc.fontSize(12).font('Helvetica').text('No appointments found for this date.', { align: 'center' })
       doc.moveDown()
     } else {
-      // Add appointments table
-      doc.fontSize(16).text('Appointments', { underline: true })
-      doc.moveDown()
+      // Add appointments table with professional styling
+      doc.fontSize(12).font('Helvetica-Bold').text('APPOINTMENT DETAILS', { underline: true })
+      doc.moveDown(0.5)
 
-      // Table headers
+      // Table configuration
       const tableTop = doc.y
       const tableLeft = 50
-      const colWidths = [80, 80, 100, 80, 80, 100]
-      const headers = ['Time', 'Client', 'Phone', 'Car Plate', 'Service', 'Notes']
+      const colWidths = [70, 90, 90, 80, 100, 100]
+      const headers = ['Time', 'Client Name', 'Phone', 'Car Plate', 'Service', 'Notes']
+      const rowHeight = 20
       
-      // Draw headers
-      doc.fontSize(10).font('Helvetica-Bold')
+      // Draw table header with background
+      doc.rect(tableLeft, tableTop, colWidths.reduce((a, b) => a + b, 0), rowHeight)
+        .fill('#1e40af').stroke('#1e3a8a')
+      
+      // Ensure header text is white and visible
+      doc.fontSize(8).font('Helvetica-Bold').fillColor('white')
       headers.forEach((header, i) => {
-        doc.text(header, tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop)
+        const x = tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 5
+        const y = tableTop + 6
+        doc.text(header, x, y)
       })
-      doc.moveDown()
+      
+      // Reset to black text for data rows
+      doc.fillColor('black')
 
-      // Draw appointments
-      doc.fontSize(10).font('Helvetica')
-      appointments.forEach((appointment: any) => {
+      // Draw appointments with alternating row colors
+      appointments.forEach((appointment: any, index: number) => {
+        const rowY = tableTop + (index + 1) * rowHeight
+        const isEven = index % 2 === 0
+        
+        // Alternate row background
+        if (isEven) {
+          doc.rect(tableLeft, rowY, colWidths.reduce((a, b) => a + b, 0), rowHeight)
+            .fill('#f8fafc').stroke('#e2e8f0')
+        } else {
+          doc.rect(tableLeft, rowY, colWidths.reduce((a, b) => a + b, 0), rowHeight)
+            .fill('#ffffff').stroke('#e2e8f0')
+        }
+        
         const rowData = [
           new Date(appointment.start).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
-          appointment.customer?.name || 'N/A',
-          appointment.customer?.phone || 'N/A',
-          appointment.customer?.carPlate || 'N/A',
-          appointment.serviceId?.name || 'N/A',
-          appointment.customer?.notes || '-'
+          (appointment.customer?.name || 'N/A').substring(0, 15), // Truncate long names
+          (appointment.customer?.phone || 'N/A').substring(0, 12),
+          (appointment.customer?.carPlate || 'N/A').substring(0, 10),
+          (appointment.serviceId?.name || 'N/A').substring(0, 18),
+          (appointment.customer?.notes || '-').substring(0, 20)
         ]
         
+        // Ensure data text is black and visible
+        doc.fontSize(7).font('Helvetica').fillColor('black')
         rowData.forEach((cell, i) => {
-          const x = tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0)
-          const y = doc.y
+          const x = tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 5
+          const y = rowY + 6
           doc.text(cell, x, y)
         })
-        doc.moveDown()
       })
+      
+      // Draw final table border
+      const totalHeight = (appointments.length + 1) * rowHeight
+      doc.rect(tableLeft, tableTop, colWidths.reduce((a, b) => a + b, 0), totalHeight)
+        .stroke('#1e3a8a')
+      
+      doc.y = tableTop + totalHeight + 20
     }
+
+    // Add footer with proper text color
+    doc.fontSize(8).font('Helvetica').fillColor('#6b7280')
+      .text('Generated by CarTech Morocco Appointment System', 50, doc.page.height - 50, { align: 'center' })
+      .text(`Page 1 of 1 • Generated on ${new Date().toLocaleString('en-US')}`, 50, doc.page.height - 40, { align: 'center' })
+    
+    // Reset text color to black for any remaining content
+    doc.fillColor('black')
 
     // Finalize PDF
     doc.end()
@@ -254,133 +326,6 @@ router.get('/daily/:magazinId.pdf', requireAdmin, async (req: Request, res: Resp
   }
 })
 
-/**
- * GET /api/reports/daily/all.pdf (ADMIN ONLY)
- * Get PDF export for all magazins on a specific date
- */
-router.get('/daily/all.pdf', requireAdmin, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { date } = dailyReportSchema.parse(req.query)
 
-    // Parse date range
-    const startOfDay = new Date(date + 'T00:00:00.000Z')
-    const endOfDay = new Date(date + 'T23:59:59.999Z')
-
-    // Get all confirmed appointments for the date
-    const appointments = await Appointment.find({
-      start: { $gte: startOfDay, $lte: endOfDay },
-      status: 'confirmed'
-    })
-    .populate('magazinId', 'name city address')
-    .populate('serviceId', 'name durationMinutes')
-    .sort({ start: 1 })
-    .lean()
-
-    // Create PDF document
-    const doc = new PDFDocument({ margin: 50 })
-    
-    // Set response headers for PDF download
-    res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', `attachment; filename="all-appointments-${date}.pdf"`)
-    
-    // Pipe PDF to response
-    doc.pipe(res)
-
-    // Add header
-    doc.fontSize(20).text('Daily Appointment Report - All Centers', { align: 'center' })
-    doc.moveDown()
-    doc.fontSize(12).text(`Date: ${new Date(date).toLocaleDateString('en-US')}`, { align: 'center' })
-    doc.moveDown(2)
-
-    // Add summary
-    doc.fontSize(16).text('Summary', { underline: true })
-    doc.fontSize(12).text(`Total Appointments: ${appointments.length}`)
-    doc.moveDown()
-
-    if (appointments.length === 0) {
-      // Add message for no appointments
-      doc.fontSize(14).text('No appointments found for this date.', { align: 'center' })
-      doc.moveDown()
-    } else {
-      // Group appointments by magazin
-      const appointmentsByMagazin = appointments.reduce((acc: any, appointment: any) => {
-        const magazinId = appointment.magazinId._id.toString()
-        if (!acc[magazinId]) {
-          acc[magazinId] = {
-            name: appointment.magazinId.name,
-            city: appointment.magazinId.city,
-            appointments: []
-          }
-        }
-        acc[magazinId].appointments.push(appointment)
-        return acc
-      }, {})
-
-      // Add appointments by magazin
-      Object.values(appointmentsByMagazin).forEach((magazinData: any) => {
-        doc.fontSize(14).text(`${magazinData.name} - ${magazinData.city}`, { underline: true })
-        doc.fontSize(12).text(`Appointments: ${magazinData.appointments.length}`)
-        doc.moveDown()
-
-        // Table headers
-        const tableTop = doc.y
-        const tableLeft = 50
-        const colWidths = [80, 80, 100, 80, 80, 100]
-        const headers = ['Time', 'Client', 'Phone', 'Car Plate', 'Service', 'Notes']
-        
-        // Draw headers
-        doc.fontSize(10).font('Helvetica-Bold')
-        headers.forEach((header, i) => {
-          doc.text(header, tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop)
-        })
-        doc.moveDown()
-
-        // Draw appointments
-        doc.fontSize(10).font('Helvetica')
-        magazinData.appointments.forEach((appointment: any) => {
-          const rowData = [
-            new Date(appointment.start).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
-            appointment.customer?.name || 'N/A',
-            appointment.customer?.phone || 'N/A',
-            appointment.customer?.carPlate || 'N/A',
-            appointment.serviceId?.name || 'N/A',
-            appointment.customer?.notes || '-'
-          ]
-          
-          rowData.forEach((cell, i) => {
-            const x = tableLeft + colWidths.slice(0, i).reduce((a, b) => a + b, 0)
-            const y = doc.y
-            doc.text(cell, x, y)
-          })
-          doc.moveDown()
-        })
-        
-        doc.moveDown(2)
-      })
-    }
-
-    // Finalize PDF
-    doc.end()
-
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json({
-        success: false,
-        message: 'Validation error',
-        errors: error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message
-        }))
-      })
-      return
-    }
-
-    console.error('All PDF export error:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    })
-  }
-})
 
 export default router

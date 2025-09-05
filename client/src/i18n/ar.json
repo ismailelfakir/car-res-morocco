@@ -23,7 +23,9 @@
     "fast": "سريع",
     "nationwide": "على مستوى البلاد",
     "certified": "معتمد",
-    "actions": "الإجراءات"
+    "actions": "الإجراءات",
+    "quickActions": "إجراءات سريعة",
+    "select": "اختيار"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -42,7 +44,8 @@
     "hero": {
       "title": "خدمات فحص السيارات المهنية",
       "description": "احصل على فحص سيارتك من فنيين معتمدين في مواقع مريحة عبر المغرب",
-      "cta": "حجز موعد"
+      "cta": "حجز موعد",
+      "badge": "موثوق من قبل 10,000+ عميل"
     },
     "features": {
       "title": "لماذا تختارنا",
@@ -78,11 +81,61 @@
       "bookAppointment": "حجز موعد",
       "findLocations": "البحث عن المواقع"
     },
+    "contact": {
+      "title": "تواصل معنا",
+      "subtitle": "لديك أسئلة؟ نحن هنا لمساعدتك في احتياجات فحص مركبتك",
+      "badge": "اتصل بنا",
+      "info": {
+        "title": "معلومات الاتصال",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني"
+      },
+      "form": {
+        "title": "أرسل لنا رسالة",
+        "name": "اسمك",
+        "email": "بريدك الإلكتروني",
+        "phone": "هاتفك",
+        "subject": "الموضوع",
+        "message": "الرسالة",
+        "send": "إرسال الرسالة",
+        "sending": "جاري الإرسال...",
+        "success": "تم إرسال الرسالة بنجاح!",
+        "error": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى."
+      },
+      "cta": {
+        "title": "تحتاج مساعدة؟",
+        "subtitle": "فريق الدعم لدينا جاهز لمساعدتك",
+        "contact": "اتصل بالدعم"
+      },
+      "social": {
+        "title": "تابعنا",
+        "subtitle": "ابق على تواصل معنا عبر وسائل التواصل الاجتماعي"
+      }
+    },
     "stats": {
-      "vehiclesInspected": "السيارات المفحوصة",
+      "servicesAvailable": "الخدمات المتاحة",
       "technicalCenters": "المراكز التقنية",
       "customerSatisfaction": "رضا العملاء",
       "onlineBooking": "الحجز عبر الإنترنت"
+    },
+    "featuredServices": {
+      "title": "خدماتنا المميزة",
+      "subtitle": "خدمات فحص السيارات المهنية المصممة لتلبية احتياجاتك المحددة",
+      "badge": "خدمات مهنية",
+      "defaultDescription": "خدمة فحص السيارات المهنية مع فنيين معتمدين ومعدات متطورة.",
+      "feature1": "فنيون معتمدون",
+      "feature2": "معدات متطورة",
+      "learnMore": "اعرف المزيد",
+      "viewAllServices": "عرض جميع الخدمات"
+    },
+    "featuredCenters": {
+      "title": "مراكزنا التقنية",
+      "subtitle": "قم بزيارة مراكز الفحص المتطورة لدينا في جميع أنحاء المغرب",
+      "badge": "مواقع متميزة",
+      "feature1": "مرافق حديثة",
+      "feature2": "وصول مريح",
+      "visitCenter": "زيارة المركز",
+      "viewAllCenters": "عرض جميع المراكز"
     }
   },
   "services": {
@@ -157,7 +210,10 @@
     "casablanca": "المركز التقني الدار البيضاء",
     "rabat": "المركز التقني الرباط",
     "marrakech": "المركز التقني مراكش",
+    "centerInformation": "معلومات المركز",
+    "contactInformation": "معلومات الاتصال",
     "address": "العنوان",
+    "location": "الموقع",
     "hours": "ساعات العمل",
     "capacity": "السعة لكل فترة",
     "slotDuration": "مدة الفترة",
@@ -208,13 +264,25 @@
       "selectLocation": "اختر موقع",
       "selectDate": "اختر تاريخ",
       "selectTime": "اختر فترة زمنية",
+      "filterByCity": "تصفية حسب المدينة",
+      "allCities": "جميع المدن",
+      "selectCities": "اختر المدن لتصفية المراكز:",
+      "addMoreCities": "أضف المزيد من المدن:",
+      "clearAllCities": "مسح جميع المدن",
+      "noCentersInSelectedCities": "لا توجد مراكز متاحة في المدن المحددة",
+      "centersInSelectedCities": "مركز متاح في المدن المحددة",
       "phoneHelper": "الصيغة: +212 6 12 34 56 78 أو 06 12 34 56 78"
     },
     "status": {
+      "free": "متاح",
       "pending": "في الانتظار",
       "confirmed": "مؤكد",
-      "cancelled": "ملغي"
+      "cancelled": "ملغي",
+      "full": "ممتلئ",
+      "active": "نشط",
+      "inactive": "غير نشط"
     },
+    "checkAvailability": "فحص التوفر",
     "reference": "رمز المرجع",
     "book": "حجز موعد",
     "confirm": "تأكيد الموعد",

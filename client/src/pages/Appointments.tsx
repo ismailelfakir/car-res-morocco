@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Card, { CardBody } from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
@@ -34,14 +34,18 @@ interface TimeSlot {
 const Appointments: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [currentStep, setCurrentStep] = useState(1)
 
   const [services, setServices] = useState<Service[]>([])
   const [magazins, setMagazins] = useState<Magazin[]>([])
+  const [filteredMagazins, setFilteredMagazins] = useState<Magazin[]>([])
   const [availability, setAvailability] = useState<TimeSlot[]>([])
 
   const [magazinSlotDuration, setMagazinSlotDuration] = useState<number | null>(null)
+  const [selectedCities, setSelectedCities] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
 
   const [loading, setLoading] = useState(true)
   const [availabilityLoading, setAvailabilityLoading] = useState(false)
@@ -67,6 +71,22 @@ const Appointments: React.FC = () => {
     return `${year}-${month}-${day}`
   }
 
+  const toggleCity = (city: string) => {
+    setSelectedCities(prev => 
+      prev.includes(city) 
+        ? prev.filter(c => c !== city)
+        : [...prev, city]
+    )
+  }
+
+  const removeCity = (city: string) => {
+    setSelectedCities(prev => prev.filter(c => c !== city))
+  }
+
+  const clearAllCities = () => {
+    setSelectedCities([])
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,6 +104,10 @@ const Appointments: React.FC = () => {
           const data = await magazinsRes.json()
           const mags = data.data || []
           setMagazins(mags)
+          
+          // Extract unique cities
+          const uniqueCities = [...new Set(mags.map((m: Magazin) => m.city))] as string[]
+          setCities(uniqueCities)
         }
       } catch (e) {
         console.error('Error fetching data', e)
@@ -94,14 +118,76 @@ const Appointments: React.FC = () => {
     fetchData()
   }, [])
 
+  // Prefill from URL query params
+  useEffect(() => {
+    if (loading) return
+    const params = new URLSearchParams(location.search)
+    const qServiceId = params.get('serviceId') || ''
+    const qMagazinId = params.get('magazinId') || ''
+    const qDate = params.get('date') || ''
+    const qTime = params.get('time') || ''
+
+    let nextStep = 1
+
+    if (qServiceId) setServiceId(qServiceId)
+    if (qMagazinId) setMagazinId(qMagazinId)
+
+    // If time is an ISO string, derive date and HH:mm
+    const tryIso = (() => {
+      if (!qTime) return false
+      const d = new Date(qTime)
+      if (isNaN(d.getTime())) return false
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      const hours = String(d.getHours()).padStart(2, '0')
+      const minutes = String(d.getMinutes()).padStart(2, '0')
+      setSelectedDate(`${year}-${month}-${day}`)
+      setSelectedTime(`${hours}:${minutes}`)
+      setSelectedStartISO(`${year}-${month}-${day}T${hours}:${minutes}:00.000`)
+      return true
+    })()
+
+    if (!tryIso) {
+      if (qDate) setSelectedDate(qDate)
+      if (qDate && qTime) {
+        setSelectedTime(qTime)
+        const [hStr, mStr] = qTime.split(':')
+        if (hStr && mStr) {
+          const iso = `${qDate}T${hStr.padStart(2,'0')}:${mStr.padStart(2,'0')}:00.000`
+          setSelectedStartISO(iso)
+        }
+      }
+    }
+
+    if (qServiceId && qMagazinId) nextStep = 2
+    if (qServiceId && qMagazinId && (qDate || tryIso)) nextStep = 2
+    if (qServiceId && qMagazinId && (qDate || tryIso) && (qTime || tryIso)) nextStep = 3
+
+    setCurrentStep(nextStep)
+  }, [location.search, loading])
+
+  // Filter magazins based on selected cities
+  useEffect(() => {
+    if (selectedCities.length > 0) {
+      const filtered = magazins.filter(m => selectedCities.includes(m.city))
+      setFilteredMagazins(filtered)
+      
+      // Clear selected magazin if it's not in the filtered list
+      if (magazinId && !filtered.find(m => m._id === magazinId)) {
+        setMagazinId('')
+      }
+    } else {
+      setFilteredMagazins(magazins)
+    }
+  }, [selectedCities, magazins, magazinId])
+
   // Fetch selected magazin details for working hours
   useEffect(() => {
     const fetchMagazinDetails = async () => {
       if (!magazinId) return
       try {
-        // @ts-ignore Vite import meta env
-
-        const res = await fetch(`${api}/magazins/${magazinId}`)
+        const res = await api.get(endpoints.magazins.get(magazinId))
         if (res.ok) {
           const data = await res.json()
           
@@ -123,9 +209,11 @@ const Appointments: React.FC = () => {
   }, [selectedDate])
 
   useEffect(() => {
-    // Ensure a default date when entering step 2
+    // Ensure a default date when entering step 2 (start from tomorrow)
     if (currentStep === 2 && !selectedDate) {
-      setSelectedDate(formatLocalDate(new Date()))
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      setSelectedDate(formatLocalDate(tomorrow))
     }
   }, [currentStep])
 
@@ -139,6 +227,9 @@ const Appointments: React.FC = () => {
         if (res.ok) {
           const data = await res.json()
           const rawSlots = (data.data && data.data.slots) || data.slots || []
+          
+
+          
           const itemsFromServer: TimeSlot[] = rawSlots.map((slot: any) => {
             const start: string = slot.start || ''
             // Parse the time from the slot data
@@ -169,10 +260,10 @@ const Appointments: React.FC = () => {
             
             // Map backend status to frontend status
             let frontendStatus: 'free' | 'pending' | 'full' = 'free'
-            if (slot.available === false) {
+            if (slot.available === false || slot.takenCount >= slot.capacity) {
               frontendStatus = 'full'
             } else if (slot.takenCount > 0) {
-              // If there are taken appointments, show as pending
+              // If there are taken appointments but still capacity, show as pending
               frontendStatus = 'pending'
             } else {
               frontendStatus = 'free'
@@ -203,7 +294,8 @@ const Appointments: React.FC = () => {
             }
             // Working hours removed, use empty array
             const periods: Array<{ start: string; end: string }> = []
-            if (periods.length === 0) return []
+            // If periods are not defined, fall back to server-provided slots
+            if (periods.length === 0) return itemsFromServer
 
             const mapByTime = new Map<string, TimeSlot>()
             for (const s of itemsFromServer) if (s.time) mapByTime.set(s.time, s)
@@ -361,10 +453,10 @@ const Appointments: React.FC = () => {
                 
                 // Map backend status to frontend status
                 let frontendStatus: 'free' | 'pending' | 'full' = 'free'
-                if (slot.available === false) {
+                if (slot.available === false || slot.takenCount >= slot.capacity) {
                   frontendStatus = 'full'
                 } else if (slot.takenCount > 0) {
-                  // If there are taken appointments, show as pending
+                  // If there are taken appointments but still capacity, show as pending
                   frontendStatus = 'pending'
                 } else {
                   frontendStatus = 'free'
@@ -419,13 +511,13 @@ const Appointments: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'free':
-        return 'bg-green-600 hover:bg-green-700'
+        return 'bg-green-600 hover:bg-green-700 text-white'
       case 'pending':
-        return 'bg-yellow-500'
+        return 'bg-yellow-500 hover:bg-yellow-600 text-white'
       case 'full':
-        return 'bg-gray-500'
+        return 'bg-red-500 text-white'
       default:
-        return 'bg-gray-400'
+        return 'bg-gray-400 text-white'
     }
   }
 
@@ -434,9 +526,9 @@ const Appointments: React.FC = () => {
       case 'free':
         return 'Available - Click to select'
       case 'pending':
-        return 'Reserved - Not available'
+        return 'Partially booked - Limited availability'
       case 'full':
-        return 'Full - No more capacity'
+        return 'Fully booked - Not available'
       default:
         return 'Unknown status'
     }
@@ -526,27 +618,111 @@ const Appointments: React.FC = () => {
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('appointments.steps.serviceLocation.title')}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Select
-                      label={t('appointments.form.service')}
-                      options={services.map((s) => ({ value: s._id, label: s.name }))}
-                      value={serviceId}
-                      onChange={setServiceId}
-                      placeholder={t('appointments.form.selectService')}
-                      required
-                      variant="filled"
-                      size="md"
-                    />
-                    <Select
-                      label={t('appointments.form.location')}
-                      options={magazins.map((m) => ({ value: m._id, label: `${m.name} - ${m.city}` }))}
-                      value={magazinId}
-                      onChange={setMagazinId}
-                      placeholder={t('appointments.form.selectLocation')}
-                      required
-                      variant="filled"
-                      size="md"
-                    />
+                  <div className="space-y-6">
+                    {/* City Filter */}
+                    <div className="w-full">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {t('appointments.form.filterByCity')}
+                      </label>
+                      
+                      {/* Selected Cities Display */}
+                      {selectedCities.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-2 mb-2">
+                            {selectedCities.map(city => (
+                              <span
+                                key={city}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+                              >
+                                {city}
+                                <button
+                                  type="button"
+                                  onClick={() => removeCity(city)}
+                                  className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                                >
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={clearAllCities}
+                            className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline"
+                          >
+{t('appointments.form.clearAllCities')}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Available Cities */}
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {selectedCities.length === 0 ? t('appointments.form.selectCities') : t('appointments.form.addMoreCities')}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {cities.map(city => (
+                            <button
+                              key={city}
+                              type="button"
+                              onClick={() => toggleCity(city)}
+                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                selectedCities.includes(city)
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                              }`}
+                            >
+                              {city}
+                              {selectedCities.includes(city) && (
+                                <svg className="w-4 h-4 inline ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Service and Location Selection */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Select
+                        label={t('appointments.form.service')}
+                        options={services.map((s) => ({ value: s._id, label: s.name }))}
+                        value={serviceId}
+                        onChange={setServiceId}
+                        placeholder={t('appointments.form.selectService')}
+                        required
+                        variant="filled"
+                        size="md"
+                      />
+                      <div>
+                        <Select
+                          label={t('appointments.form.location')}
+                          options={filteredMagazins.map((m) => ({ value: m._id, label: `${m.name} - ${m.city}` }))}
+                          value={magazinId}
+                          onChange={setMagazinId}
+                          placeholder={t('appointments.form.selectLocation')}
+                          required
+                          variant="filled"
+                          size="md"
+                        />
+                        {selectedCities.length > 0 && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {filteredMagazins.length === 0 
+                              ? t('appointments.form.noCentersInSelectedCities')
+                              : `${filteredMagazins.length} ${t('appointments.form.centersInSelectedCities')}`
+                            }
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Show Working Hours for Selected Magazin */}
@@ -598,13 +774,15 @@ const Appointments: React.FC = () => {
                         type="button"
                         className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                         onClick={() => {
-                          // Move selection one day back if not before today (local)
+                          // Move selection one day back if not before tomorrow (local)
                           const d = selectedDate ? new Date(selectedDate) : new Date()
                           const prev = new Date(d)
                           prev.setDate(d.getDate() - 1)
-                          const todayStr = formatLocalDate(new Date())
+                          const tomorrow = new Date()
+                          tomorrow.setDate(tomorrow.getDate() + 1)
+                          const tomorrowStr = formatLocalDate(tomorrow)
                           const prevStr = formatLocalDate(prev)
-                          if (prevStr >= todayStr) setSelectedDate(prevStr)
+                          if (prevStr >= tomorrowStr) setSelectedDate(prevStr)
                         }}
                         aria-label={t('appointments.previousDay')}
                       >
@@ -615,7 +793,7 @@ const Appointments: React.FC = () => {
                           {Array.from({ length: 14 }).map((_, i) => {
                             const base = new Date()
                             base.setHours(0,0,0,0)
-                            base.setDate(base.getDate() + i)
+                            base.setDate(base.getDate() + i + 1) // Start from tomorrow (i + 1)
                             const dateStr = formatLocalDate(base)
                             const selected = selectedDate === dateStr
                             const label = base.toLocaleDateString(undefined, { weekday: 'short' })
@@ -628,10 +806,10 @@ const Appointments: React.FC = () => {
                                 className={`min-w-[84px] px-3 py-2 rounded-xl border text-left transition ${
                                   selected
                                     ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-900/30 dark:text-blue-200'
-                                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'
+                                    : 'border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                               >
-                                <div className="text-xs opacity-70">{label}</div>
+                                <div className="text-xs opacity-70 dark:opacity-60">{label}</div>
                                 <div className="text-lg font-semibold">{dayNum}</div>
                               </button>
                             )
@@ -665,19 +843,19 @@ const Appointments: React.FC = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                            <span className="text-gray-600 dark:text-gray-400">Pending</span>
+                            <span className="text-gray-600 dark:text-gray-400">Partially Booked</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                            <span className="text-gray-600 dark:text-gray-400">Full/Taken</span>
+                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                            <span className="text-gray-600 dark:text-gray-400">Fully Booked</span>
                           </div>
                         </div>
                         
                         {/* Slot Counts */}
                         <div className="text-xs text-gray-500 dark:text-gray-400">
                           <span className="font-medium text-green-600">{availability.filter(s => s.status === 'free').length}</span> available • 
-                          <span className="font-medium text-yellow-500 ml-1">{availability.filter(s => s.status === 'pending').length}</span> pending • 
-                          <span className="font-medium text-gray-500 ml-1">{availability.filter(s => s.status === 'full').length}</span> taken
+                          <span className="font-medium text-yellow-500 ml-1">{availability.filter(s => s.status === 'pending').length}</span> partial • 
+                          <span className="font-medium text-red-500 ml-1">{availability.filter(s => s.status === 'full').length}</span> full
                         </div>
                       </div>
                       {availabilityLoading ? (
@@ -738,10 +916,10 @@ const Appointments: React.FC = () => {
                                               }
                                               
                                               let frontendStatus: 'free' | 'pending' | 'full' = 'free'
-                                              if (slot.available === false) {
+                                              if (slot.available === false || slot.takenCount >= slot.capacity) {
                                                 frontendStatus = 'full'
                                               } else if (slot.takenCount > 0) {
-                                                // If there are taken appointments, show as pending
+                                                // If there are taken appointments but still capacity, show as pending
                                                 frontendStatus = 'pending'
                                               } else {
                                                 frontendStatus = 'free'
@@ -776,9 +954,9 @@ const Appointments: React.FC = () => {
                                 setError('') // Clear any previous errors
                               }}
                               disabled={slot.status !== 'free'}
-                              className={`p-3 rounded-lg text-white text-sm font-medium transition ${getStatusColor(slot.status)} ${
+                              className={`p-3 rounded-lg text-sm font-medium transition ${getStatusColor(slot.status)} ${
                                 selectedStartISO === slot.start ? 'ring-2 ring-offset-2 ring-blue-300 dark:ring-offset-gray-900 shadow-lg' : ''
-                              } ${slot.status !== 'free' ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'} ${
+                              } ${slot.status !== 'free' ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'} ${
                                 recentlyTakenSlots.has(slot.time) ? 'animate-pulse ring-2 ring-red-400' : ''
                               }`}
                               title={`${slot.time} - ${getStatusText(slot.status)}`}
@@ -797,7 +975,7 @@ const Appointments: React.FC = () => {
                                 )}
                                 {slot.status === 'full' && (
                                   <svg className="w-3 h-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
                                   </svg>
                                 )}
                               </div>

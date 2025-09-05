@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Card, { CardHeader, CardBody } from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Select from '../components/ui/Select'
@@ -40,6 +41,7 @@ interface TimeSlot {
 const MagazinDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   
   const [magazin, setMagazin] = useState<Magazin | null>(null)
   const [services, setServices] = useState<Service[]>([])
@@ -121,13 +123,13 @@ const MagazinDetail: React.FC = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'free':
-        return 'Free'
+        return t('appointments.status.free')
       case 'pending':
-        return 'Pending'
+        return t('appointments.status.pending')
       case 'full':
-        return 'Full'
+        return t('appointments.status.full')
       default:
-        return 'Unknown'
+        return t('booking.unknown')
     }
   }
 
@@ -137,24 +139,25 @@ const MagazinDetail: React.FC = () => {
     }
   }
 
+  const magazinServiceIds = new Set(
+    (magazin?.services || []).map((s: any) => (typeof s === 'string' ? s : s?._id))
+  )
+
   const serviceOptions = services
-    .filter(service => magazin?.services.includes(service._id))
-    .map(service => ({
-      value: service._id,
-                            label: service.name
-    }))
+    .filter(service => magazinServiceIds.has(service._id))
+    .map(service => ({ value: service._id, label: service.name }))
 
 
 
   const getDayName = (day: string) => {
     const dayNames: { [key: string]: string } = {
-      mon: 'Monday',
-      tue: 'Tuesday',
-      wed: 'Wednesday',
-      thu: 'Thursday',
-      fri: 'Friday',
-      sat: 'Saturday',
-      sun: 'Sunday'
+      mon: t('workingHours.monday'),
+      tue: t('workingHours.tuesday'),
+      wed: t('workingHours.wednesday'),
+      thu: t('workingHours.thursday'),
+      fri: t('workingHours.friday'),
+      sat: t('workingHours.saturday'),
+      sun: t('workingHours.sunday')
     }
     return dayNames[day] || day
   }
@@ -198,7 +201,7 @@ const MagazinDetail: React.FC = () => {
                   ? 'bg-green-500 text-white' 
                   : 'bg-red-500 text-white'
               }`}>
-                {magazin.active ? 'Active' : 'Inactive'}
+                {magazin.active ? t('appointments.status.active') : t('appointments.status.inactive')}
               </span>
             </div>
           </div>
@@ -216,29 +219,29 @@ const MagazinDetail: React.FC = () => {
                   <svg className="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
-                  Center Information
+                  {t('locations.centerInformation')}
                 </h2>
               </CardHeader>
               <CardBody>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Address</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('locations.address')}</h3>
                     <p className="text-gray-600 dark:text-gray-300">{magazin.address}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Timezone</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('locations.timezone')}</h3>
                     <p className="text-gray-600 dark:text-gray-300">{magazin.timezone}</p>
                   </div>
                   {magazin.geo && (
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Location</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('locations.location')}</h3>
                       <p className="text-gray-600 dark:text-gray-300">
                         {magazin.geo.lat.toFixed(6)}, {magazin.geo.lng.toFixed(6)}
                       </p>
                     </div>
                   )}
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Available Services</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('locations.availableServices')}</h3>
                     <p className="text-gray-600 dark:text-gray-300">{magazin.services.length} service{magazin.services.length !== 1 ? 's' : ''}</p>
                   </div>
                 </div>
@@ -252,7 +255,7 @@ const MagazinDetail: React.FC = () => {
                   <svg className="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Working Hours
+                  {t('locations.workingHours')}
                 </h2>
               </CardHeader>
               <CardBody>
@@ -281,7 +284,7 @@ const MagazinDetail: React.FC = () => {
                             ))}
                           </div>
                         ) : (
-                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Closed</span>
+                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('locations.closed')}</span>
                         )}
                       </div>
                     </div>
@@ -293,7 +296,7 @@ const MagazinDetail: React.FC = () => {
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <span className="text-sm font-medium">
-                      All times are in {magazin.timezone} timezone
+                      {t('locations.timezone')}: {magazin.timezone}
                     </span>
                   </div>
                 </div>
@@ -307,20 +310,20 @@ const MagazinDetail: React.FC = () => {
                   <svg className="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Check Availability
+                  {t('appointments.checkAvailability')}
                 </h2>
               </CardHeader>
               <CardBody>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Select
-                    label="Service"
+                    label={t('appointments.form.service')}
                     options={serviceOptions}
                     value={selectedService}
                     onChange={setSelectedService}
-                    placeholder="Select a service"
+                    placeholder={t('appointments.form.selectService')}
                   />
                   <Input
-                    label="Date"
+                    label={t('appointments.form.date')}
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
@@ -334,7 +337,7 @@ const MagazinDetail: React.FC = () => {
                       loading={availabilityLoading}
                       className="w-full"
                     >
-                      Check Availability
+                      {t('appointments.checkAvailability')}
                     </Button>
                   </div>
                 </div>
@@ -349,7 +352,7 @@ const MagazinDetail: React.FC = () => {
                     <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    Available Slots for {selectedDate}
+                    {t('appointments.form.time')} — {selectedDate}
                   </h3>
                 </CardHeader>
                 <CardBody>
@@ -375,15 +378,15 @@ const MagazinDetail: React.FC = () => {
                   <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-700 dark:text-gray-300">
                     <div className="flex items-center">
                       <div className="w-4 h-4 bg-green-500 rounded mr-2"></div>
-                      <span>Free</span>
+                      <span>{t('appointments.status.free')}</span>
                     </div>
                     <div className="flex items-center">
                       <div className="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
-                      <span>Pending</span>
+                      <span>{t('appointments.status.pending')}</span>
                     </div>
                     <div className="flex items-center">
                       <div className="w-4 h-4 bg-gray-400 rounded mr-2"></div>
-                      <span>Full</span>
+                      <span>{t('appointments.status.full')}</span>
                     </div>
                   </div>
                 </CardBody>
@@ -396,7 +399,7 @@ const MagazinDetail: React.FC = () => {
             {/* Quick Actions */}
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('common.quickActions')}</h3>
               </CardHeader>
               <CardBody className="space-y-3">
                 <Button
@@ -407,7 +410,7 @@ const MagazinDetail: React.FC = () => {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Book Appointment
+                  {t('locations.bookAppointment')}
                 </Button>
                 <Button
                   variant="outline"
@@ -417,7 +420,7 @@ const MagazinDetail: React.FC = () => {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
-                  Back to Centers
+                  {t('locations.viewAllCenters')}
                 </Button>
               </CardBody>
             </Card>
@@ -425,17 +428,17 @@ const MagazinDetail: React.FC = () => {
             {/* Available Services */}
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-gray-900">Available Services</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('locations.availableServices')}</h3>
               </CardHeader>
               <CardBody>
                 <div className="space-y-3">
                   {services
-                    .filter(service => magazin.services.includes(service._id))
+                    .filter(service => magazinServiceIds.has(service._id))
                     .map(service => (
-                      <div key={service._id} className="p-3 bg-gray-50 rounded-lg">
+                      <div key={service._id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="font-medium text-gray-900">{service.name}</h4>
+                            <h4 className="font-medium text-gray-900 dark:text-gray-100">{service.name}</h4>
         
                           </div>
                           <Button
@@ -447,7 +450,7 @@ const MagazinDetail: React.FC = () => {
                               setAvailability([])
                             }}
                           >
-                            Select
+                            {t('common.select')}
                           </Button>
                         </div>
                       </div>
@@ -459,18 +462,18 @@ const MagazinDetail: React.FC = () => {
             {/* Contact Information */}
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-gray-900">Contact Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('locations.contactInformation')}</h3>
               </CardHeader>
               <CardBody>
                 <div className="space-y-3">
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center text-gray-600 dark:text-gray-300">
                     <svg className="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>{magazin.city}</span>
                   </div>
-                  <div className="flex items-start text-gray-600">
+                  <div className="flex items-start text-gray-600 dark:text-gray-300">
                     <svg className="w-5 h-5 mr-3 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
