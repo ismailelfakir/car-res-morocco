@@ -137,19 +137,10 @@ const Navbar: React.FC = () => {
             {/* Auth Buttons (hidden on mobile) */}
             <div className="hidden md:flex items-center space-x-2">
               {isAuthenticated ? (
-                <>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/admin">Admin</Link>
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={logout}>
-                    {t('navigation.logout')}
-                  </Button>
-                </>
-              ) : (
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/admin/login">{t('navigation.login')}</Link>
+                <Button variant="outline" size="sm" onClick={logout}>
+                  {t('navigation.logout')}
                 </Button>
-              )}
+              ) : null}
             </div>
 
             {/* Mobile hamburger (right) */}
@@ -204,19 +195,10 @@ const Navbar: React.FC = () => {
           {/* Auth (mobile) */}
           <div className="mt-2 px-3 flex items-center gap-2">
             {isAuthenticated ? (
-              <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/admin" onClick={() => setMobileOpen(false)}>Admin</Link>
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => { setMobileOpen(false); logout() }}>
-                  {t('navigation.logout')}
-                </Button>
-              </>
-            ) : (
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/admin/login" onClick={() => setMobileOpen(false)}>{t('navigation.login')}</Link>
+              <Button variant="outline" size="sm" onClick={() => { setMobileOpen(false); logout() }}>
+                {t('navigation.logout')}
               </Button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
