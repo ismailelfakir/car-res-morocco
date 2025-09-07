@@ -99,7 +99,9 @@ const createAppointmentSchema = z.object({
 const adminQuerySchema = z.object({
   status: z.enum(['pending', 'confirmed', 'canceled']).optional(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional(),
-  magazinId: z.string().optional()
+  magazinId: z.string().optional(),
+  page: z.string().regex(/^\d+$/).optional(),
+  limit: z.string().regex(/^\d+$/).optional()
 })
  
 /**
@@ -449,7 +451,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 router.get('/admin', requireAdmin, async (req: Request, res: Response): Promise<void> => {
   try {
     // Validate query parameters
-    const { status, date, magazinId } = adminQuerySchema.parse(req.query)
+    const { status, date, magazinId, page: pageStr, limit: limitStr } = adminQuerySchema.parse(req.query)
 
     // Build query
     const query: any = {}
@@ -475,11 +477,21 @@ router.get('/admin', requireAdmin, async (req: Request, res: Response): Promise<
       query.magazinId = magazinId
     }
 
-    // Get appointments with populated magazin and service
+    // Pagination params (defaults)
+    const page = Math.max(parseInt(pageStr || '1', 10), 1)
+    const limit = Math.max(parseInt(limitStr || '10', 10), 1)
+    const skip = (page - 1) * limit
+
+    // Count total for pagination
+    const total = await Appointment.countDocuments(query)
+
+    // Get appointments with populated magazin and service (latest first)
     const appointments = await Appointment.find(query)
       .populate('magazinId', 'name city address')
       .populate('serviceId', 'name')
-      .sort({ start: 1 })
+      .sort({ start: -1 })
+      .skip(skip)
+      .limit(limit)
       .lean()
 
     // Add cache control headers to prevent caching
@@ -492,7 +504,11 @@ router.get('/admin', requireAdmin, async (req: Request, res: Response): Promise<
     res.status(200).json({
       success: true,
       data: appointments,
-      count: appointments.length
+      count: appointments.length,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
     })
 
   } catch (error) {

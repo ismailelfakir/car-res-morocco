@@ -42,6 +42,9 @@ const AdminAppointments: React.FC = () => {
   const { t } = useTranslation()
 
   const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [page, setPage] = useState(1)
+  const [limit] = useState(10)
+  const [totalPages, setTotalPages] = useState(1)
   const [magazins, setMagazins] = useState<Magazin[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -68,7 +71,7 @@ const AdminAppointments: React.FC = () => {
     // Prevent duplicate API calls using ref
     if (!isFetchingRef.current) {
       isFetchingRef.current = true
-      fetchAppointments()
+      fetchAppointments(1)
       fetchMagazins()
     }
   }, [])
@@ -83,19 +86,22 @@ const AdminAppointments: React.FC = () => {
     return () => clearTimeout(timer)
   }, [filters])
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (targetPage = page) => {
     try {
       setError(null)
       const params = new URLSearchParams()
+      params.append('page', String(targetPage))
+      params.append('limit', String(limit))
       if (filters.status) params.append('status', filters.status)
       if (filters.date) params.append('date', filters.date)
       if (filters.magazinId) params.append('magazinId', filters.magazinId)
 
-      // Always fetch all appointments for admin view, filters are applied client-side
-      const response = await api.get(endpoints.appointments.admin, api.withCredentials())
+      const response = await api.get(`${endpoints.appointments.admin}?${params.toString()}`, api.withCredentials())
       if (response.ok) {
         const data = await response.json()
         setAppointments(data.data || [])
+        setPage(data.page || targetPage)
+        setTotalPages(data.totalPages || 1)
       } else {
         const errorData = await response.json()
         setError(errorData.message || 'Failed to fetch appointments')
@@ -177,7 +183,7 @@ const AdminAppointments: React.FC = () => {
           </div>
           <Button
             variant="outline"
-            onClick={fetchAppointments}
+            onClick={() => fetchAppointments(1)}
             disabled={loading}
           >
             {loading ? t('admin.appointments.refreshing') : t('admin.appointments.refreshData')}
@@ -399,6 +405,31 @@ const AdminAppointments: React.FC = () => {
             data={filteredAppointments}
             emptyMessage={t('admin.appointments.noAppointmentsFound')}
           />
+
+          {/* Pagination Controls */}
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="inline-flex items-center gap-3">
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={page <= 1}
+                onClick={() => fetchAppointments(page - 1)}
+              >
+                {t('common.previous')}
+              </Button>
+              <span className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+                Page {page} of {totalPages}
+              </span>
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={page >= totalPages}
+                onClick={() => fetchAppointments(page + 1)}
+              >
+                {t('common.next')}
+              </Button>
+            </div>
+          </div>
         </CardBody>
       </Card>
     </div>
